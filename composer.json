@@ -1,5 +1,5 @@
 {
-    "name": "afbora/resellerclub-php",
+    "name": "afbora/resellerclub-php-sdk",
     "description": "PHP SDK for ResellerClub API",
     "license": "MIT",
     "authors": [

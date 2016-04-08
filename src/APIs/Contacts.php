@@ -1,10 +1,10 @@
 <?php
 
 namespace afbora\ResellerClub\APIs;
+use \afbora\ResellerClub\Helper;
 
-class Contacts {
-	use \afbora\ResellerClub\Helper;
-
+class Contacts
+{
 	protected $api = 'contacts';
 
 	public function add(

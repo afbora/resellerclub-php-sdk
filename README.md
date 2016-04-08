@@ -8,7 +8,7 @@
       }
   ],
   "require": {
-    "afbora/resellerclub-php": "dev-master"
+    "afbora/resellerclub-php-sdk": "dev-master"
   }
   ```
 
