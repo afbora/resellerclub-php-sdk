@@ -7,11 +7,12 @@ class Domains {
 
 	protected $api = 'domains';
 
-	public function available($slds, $tlds = ['com', 'org', 'net'])
+	public function available($slds, $tlds = ['com', 'org', 'net'], $suggestAlternative = false)
 	{
 		return $this->get('available', [
 			'domain-name' => $slds,
-			'tlds' => $tlds
+			'tlds' => $tlds,
+			'suggest-alternative' => $suggestAlternative
 		]);
 	}
 
