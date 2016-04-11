@@ -31,7 +31,8 @@ class ResellerClub
 
 	private function _getAPI($api)
 	{
-		if (empty($this->apis[$api])) {
+		if (empty($this->apis[$api])) 
+		{
 			$class = 'afbora\\ResellerClub\\APIs\\' . $api;
 			$this->apis[$api] = new $class($this->guzzle, $this->creds);
 		}
@@ -47,5 +48,10 @@ class ResellerClub
 	public function contacts()
 	{
 		return $this->_getAPI('contacts');
+	}
+	
+	public function customers()
+	{
+		return $this->_getAPI('customers');
 	}
 }
