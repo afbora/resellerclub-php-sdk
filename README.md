@@ -24,4 +24,4 @@ $resellerClub->domains()->getTLDs();
 $resellerClub->domains()->available(['google', 'example'], ['com', 'net']); // This will check google.com, google.net, example.com and example.net
 ```
 
-Currently all of the domain API and contact API are available.
+Currently all of the domains, contacts and customers API are available.
