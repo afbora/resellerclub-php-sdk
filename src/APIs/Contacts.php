@@ -1,10 +1,13 @@
 <?php
 
 namespace afbora\ResellerClub\APIs;
-use \afbora\ResellerClub\Helper;
+
+use afbora\ResellerClub\Helper;
 
 class Contacts
 {
+    use Helper;
+
     protected $api = 'contacts';
 
     public function add(
@@ -15,35 +18,39 @@ class Contacts
         $city,
         $country,
         $zipcode,
-        $phonecc,
+        $phoneCC,
         $phone,
         $customerId,
         $type,
         $address2 = '',
         $address3 = '',
         $state = '',
-        $faxcc = '',
+        $faxCC = '',
         $fax = '',
         $attrs = []
-    ) {
-        return $this->post('add', [
-            'name'           => $name,
-            'company'        => $company,
-            'email'          => $email,
-            'address-line-1' => $address1,
-            'city'           => $city,
-            'country'        => $country,
-            'zipcode'        => $zipcode,
-            'phone-cc'       => $phonecc,
-            'phone'          => $phone,
-            'customer-id'    => $customerId,
-            'type'           => $type,
-            'address-line-2' => $address2,
-            'address-line-3' => $address3,
-            'state'          => $state,
-            'fax-cc'         => $faxcc,
-            'fax'            => $fax,
-        ] + $this->processAttributes($attrs));
+    )
+    {
+        return $this->post(
+            'add',
+            [
+                'name'           => $name,
+                'company'        => $company,
+                'email'          => $email,
+                'address-line-1' => $address1,
+                'city'           => $city,
+                'country'        => $country,
+                'zipcode'        => $zipcode,
+                'phone-cc'       => $phoneCC,
+                'phone'          => $phone,
+                'customer-id'    => $customerId,
+                'type'           => $type,
+                'address-line-2' => $address2,
+                'address-line-3' => $address3,
+                'state'          => $state,
+                'fax-cc'         => $faxCC,
+                'fax'            => $fax,
+            ] + $this->processAttributes($attrs)
+        );
     }
 
     public function modify(
@@ -54,43 +61,57 @@ class Contacts
         $address1,
         $city,
         $zipcode,
-        $phonecc,
+        $phoneCC,
         $phone,
         $address2 = '',
         $address3 = '',
         $state = '',
-        $faxcc = '',
+        $faxCC = '',
         $fax = ''
-    ) {
-        return $this->post('modify', [
-            'contact-id'     => $contactId,
-            'name'           => $name,
-            'company'        => $company,
-            'email'          => $email,
-            'address-line-1' => $address1,
-            'city'           => $city,
-            'zipcode'        => $zipcode,
-            'phone-cc'       => $phonecc,
-            'phone'          => $phone,
-            'address-line-2' => $address2,
-            'address-line-3' => $address3,
-            'state'          => $state,
-            'fax-cc'         => $faxcc,
-            'fax'            => $fax,
-        ]);
+    )
+    {
+        return $this->post(
+            'modify',
+            [
+                'contact-id'     => $contactId,
+                'name'           => $name,
+                'company'        => $company,
+                'email'          => $email,
+                'address-line-1' => $address1,
+                'city'           => $city,
+                'zipcode'        => $zipcode,
+                'phone-cc'       => $phoneCC,
+                'phone'          => $phone,
+                'address-line-2' => $address2,
+                'address-line-3' => $address3,
+                'state'          => $state,
+                'fax-cc'         => $faxCC,
+                'fax'            => $fax,
+            ]
+        );
     }
 
-    public function get($contactId)
+    public function getContact($contactId)
     {
         return $this->get('details', ['contact-id' => $contactId]);
     }
 
-    public function search($customerId, $records = 10, $page = 1, $contactIds = [], $status = [], $name = '', $company = '', $email = '', $type = '')
+    public function search(
+        $customerId,
+        $records = 10,
+        $page = 1,
+        $contactIds = [],
+        $status = [],
+        $name = '',
+        $company = '',
+        $email = '',
+        $type = ''
+    )
     {
         $data = [
-            'customer-id' => $customerId,
+            'customer-id'   => $customerId,
             'no-of-records' => $records,
-            'page-no' => $page
+            'page-no'       => $page,
         ];
 
         if (!empty($contactIds)) {
@@ -98,7 +119,8 @@ class Contacts
         }
 
         if (!empty($status)) {
-            $data['status'] = $status; // InActive, Active, Suspended, Deleted
+            // InActive, Active, Suspended, Deleted
+            $data['status'] = $status;
         }
 
         if (!empty($name)) {
@@ -114,7 +136,8 @@ class Contacts
         }
 
         if (!empty($type)) {
-            $data['type'] = $type; // Contact, CoopContact, UkContact, EuContact, Sponsor, CnContact, CoContact, CaContact, DeContact, EsContact
+            // Contact, CoopContact, UkContact, EuContact, Sponsor, CnContact, CoContact, CaContact, DeContact, EsContact
+            $data['type'] = $type;
         }
 
         return $this->get('search', $data);
@@ -143,35 +166,39 @@ class Contacts
         $city,
         $country,
         $zipcode,
-        $phonecc,
+        $phoneCC,
         $phone,
         $customerId,
         $address2 = '',
         $address3 = '',
         $state = '',
-        $faxcc = '',
+        $faxCC = '',
         $fax = ''
-    ) {
-        return $this->post('add-sponser', [
-            'name' => $name,
-            'company' => $company,
-            'email' => $email,
-            'address-line-1' => $address1,
-            'city' => $city,
-            'country' => $country,
-            'zipcode' => $zipcode,
-            'phone-cc' => $phonecc,
-            'phone' => $phone,
-            'customer-id' => $customerId,
-            'address-line-2' => $address2,
-            'address-line-3' => $address3,
-            'state' => $state,
-            'fax-cc' => $faxcc,
-            'fax' => $fax
-        ], 'coop');
+    )
+    {
+        return $this->post(
+            'add-sponsor',
+            [
+                'name'           => $name,
+                'company'        => $company,
+                'email'          => $email,
+                'address-line-1' => $address1,
+                'city'           => $city,
+                'country'        => $country,
+                'zipcode'        => $zipcode,
+                'phone-cc'       => $phoneCC,
+                'phone'          => $phone,
+                'customer-id'    => $customerId,
+                'address-line-2' => $address2,
+                'address-line-3' => $address3,
+                'state'          => $state,
+                'fax-cc'         => $faxCC,
+                'fax'            => $fax,
+            ], 'coop'
+        );
     }
 
-    public function getSponsers(integer $customerId)
+    public function getSponsors($customerId)
     {
         return $this->get('sponsors', ['customer-id' => $customerId], 'coop');
     }
@@ -183,8 +210,17 @@ class Contacts
 
     public function validateContact(
         $contactId,
-        $check = ['CED_ASIAN_COUNTRY', 'CED_DETAILS', 'CPR', 'ES_CONTACT_IDENTIFICATION_DETAILS', 'EUROPEAN_COUNTRY', 'RU_CONTACT_INFO', 'APP_PREF_NEXUS']
-    ) {
+        $check = [
+            'CED_ASIAN_COUNTRY',
+            'CED_DETAILS',
+            'CPR',
+            'ES_CONTACT_IDENTIFICATION_DETAILS',
+            'EUROPEAN_COUNTRY',
+            'RU_CONTACT_INFO',
+            'APP_PREF_NEXUS',
+        ]
+    )
+    {
         return $this->get('validate-registrant', ['contact-id' => $contactId, 'eligibility-criteria' => $check]);
     }
 }

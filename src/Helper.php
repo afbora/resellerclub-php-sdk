@@ -3,68 +3,105 @@
 namespace afbora\ResellerClub;
 
 use GuzzleHttp\Client as Guzzle;
-use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 trait Helper
 {
-	protected $guzzle;
-	private $creds = [];
+    /**
+     * @var Guzzle
+     */
+    protected $guzzle;
 
-	public function __construct(Guzzle $guzzle, array $creds)
-	{
-		$this->creds = $creds;
-		$this->guzzle = $guzzle;
-	}
+    /**
+     * Authentication info needed for every request
+     * @var array
+     */
+    private $authentication = [];
 
-	protected function get($method, $args = [], $prefix = '')
-	{
-		return $this->parse(
-			$this->guzzle->get(
-				$this->api .'/'. $prefix . $method.'.json?'.preg_replace('/%5B[0-9]+%5D/simU', '', http_build_query(array_merge($args, $this->creds)))
-			)
-		);
-	}
+    /**
+     * @var string
+     */
+    protected $api;
 
-	protected function getXML($method, $args = [], $prefix = '')
-	{
-		return $this->parse(
-			$this->guzzle->get(
-				$this->api .'/'. $prefix . $method.'.xml?'.preg_replace('/%5B[0-9]+%5D/simU', '', http_build_query(array_merge($args, $this->creds)))
-			),
-			'xml'
-		);
-	}
+    public function __construct(Guzzle $guzzle, array $authentication)
+    {
+        $this->authentication = $authentication;
+        $this->guzzle         = $guzzle;
+    }
 
-	protected function post($method, $args = [], $prefix = '')
-	{
-		return $this->parse(
-			$this->guzzle->post($prefix . $method.'.json', $args)
-		);
-	}
+    protected function get($method, $args = [], $prefix = '')
+    {
+        return $this->parse(
+            $this->guzzle->get(
+                $this->api . '/' . $prefix . $method . '.json?' . preg_replace(
+                    '/%5B[0-9]+%5D/simU',
+                    '',
+                    http_build_query(array_merge($args, $this->authentication))
+                )
+            )
+        );
+    }
 
-	protected function parse(Response $response, $type = 'json')
-	{
-		switch ($type) {
-			case 'json':
-				return json_decode((string) $response->getBody(), true);
-			case 'xml':
-				return simplexml_load_file((string) $response->getBody());
-			default:
-				throw new Exception("Invalid repsonse type");
-		}
-	}
+    protected function getXML($method, $args = [], $prefix = '')
+    {
+        return $this->parse(
+            $this->guzzle->get(
+                $this->api . '/' . $prefix . $method . '.xml?' . preg_replace(
+                    '/%5B[0-9]+%5D/simU',
+                    '',
+                    http_build_query(array_merge($args, $this->authentication))
+                )
+            ),
+            'xml'
+        );
+    }
 
-	protected function processAttributes($args = [])
-	{
-		$data = [];
+    protected function post($method, $args = [], $prefix = '')
+    {
+        return $this->parse(
+            $this->guzzle->request(
+                'POST',
+                $this->api . '/' . $prefix . $method . '.json',
+                [
+                    RequestOptions::FORM_PARAMS => $args,
+                ]
+            )
+        );
+    }
 
-		$i = 0;
-		foreach ($attributes as $key => $value) {
-			$i++;
-			$data["attr-name{$i}"] = $key;
-			$data["attr-value{$i}"] = $value;
-		}
+    /**
+     * @param ResponseInterface $response
+     * @param string $type
+     * @return mixed|\SimpleXMLElement
+     * @throws \Exception
+     */
+    protected function parse(ResponseInterface $response, $type = 'json')
+    {
+        switch ($type) {
+            case 'json':
+                return json_decode((string)$response->getBody(), TRUE);
+            case 'xml':
+                return simplexml_load_file((string)$response->getBody());
+            default:
+                throw new \Exception(
+                    "Invalid response
+                 type"
+                );
+        }
+    }
 
-		return $data;
-	}
+    protected function processAttributes($attributes = [])
+    {
+        $data = [];
+
+        $i = 0;
+        foreach ($attributes as $key => $value) {
+            $i++;
+            $data["attr-name{$i}"]  = $key;
+            $data["attr-value{$i}"] = $value;
+        }
+
+        return $data;
+    }
 }

@@ -2,27 +2,39 @@
 
 namespace afbora\ResellerClub\APIs;
 
-class Domains {
-    use \afbora\ResellerClub\Helper;
+use afbora\ResellerClub\Helper;
 
+class Domains
+{
+    use Helper;
+
+    /**
+     * @var string
+     */
     protected $api = 'domains';
 
-    public function available($slds, $tlds = ['com', 'org', 'net'], $suggestAlternative = false)
+    public function available($slds, $tlds = ['com', 'org', 'net'], $suggestAlternative = FALSE)
     {
-        return $this->get('available', [
-            'domain-name' => $slds,
-            'tlds' => $tlds,
-            'suggest-alternative' => $suggestAlternative
-        ]);
+        return $this->get(
+            'available',
+            [
+                'domain-name'         => $slds,
+                'tlds'                => $tlds,
+                'suggest-alternative' => $suggestAlternative,
+            ]
+        );
     }
 
     public function idnAvailable($slds, $tld, $languageCode)
     {
-        return $this->get('idn-available', [
-            'domain-name' => $slds,
-            'tld' => $tld,
-            'idnLanguageCode' => $languageCode
-        ]);
+        return $this->get(
+            'idn-available',
+            [
+                'domain-name'     => $slds,
+                'tld'             => $tld,
+                'idnLanguageCode' => $languageCode,
+            ]
+        );
     }
 
     public function premiumAvailable($keyword, $tlds, $results = 10, $priceHigh = 999999999, $priceLow = 0)
@@ -30,88 +42,128 @@ class Domains {
         return $this->get(
             'available',
             [
-                'key-word' => $keyword,
-                'tlds' => $tlds,
+                'key-word'      => $keyword,
+                'tlds'          => $tlds,
                 'no-of-results' => $results,
-                'price-high' => $priceHigh,
-                'price-low' => $priceLow
+                'price-high'    => $priceHigh,
+                'price-low'     => $priceLow,
             ],
             'premium/'
         );
     }
 
-    public function ukAvailable($domain, $name, $company, $email, $address1, $city, $state, $zipcode, $country, $address2 = '', $address3 = '', $phonecc = '', $phone = '')
+    public function ukAvailable(
+        $domain,
+        $name,
+        $company,
+        $email,
+        $address1,
+        $city,
+        $state,
+        $zipCode,
+        $country,
+        $address2 = '',
+        $address3 = '',
+        $phoneCC = '',
+        $phone = ''
+    )
     {
         return $this->post(
             'available',
             [
-                'domain-name' => $domain,
-                'name' => $name,
-                'company' => $company,
-                'email' => $email,
+                'domain-name'    => $domain,
+                'name'           => $name,
+                'company'        => $company,
+                'email'          => $email,
                 'address-line-1' => $address1,
-                'city' => $city,
-                'state' => $state,
-                'zipcode' => $zipcode,
-                'country' => $country,
+                'city'           => $city,
+                'state'          => $state,
+                'zipcode'        => $zipCode,
+                'country'        => $country,
                 'address-line-2' => $address2,
                 'address-line-3' => $address3,
-                'phone-cc' => $phonecc,
-                'phone' => $phone
+                'phone-cc'       => $phoneCC,
+                'phone'          => $phone,
             ],
             'uk/'
         );
     }
 
-    public function suggestNames($keyword, $tld = '', $exactMatch = false)
+    public function suggestNames($keyword, $tld = '', $exactMatch = FALSE)
     {
         return $this->get(
             'suggest-names',
             [
-                'keyword' => $keyword,
-                'tld' => $tld,
-                'exact-match' => $exactMatch
+                'keyword'     => $keyword,
+                'tld'         => $tld,
+                'exact-match' => $exactMatch,
             ],
             'v5/'
         );
     }
 
-    public function register($domain, $years, $ns, $customer, $reg, $admin, $tech, $billing, $invoice, $purchasePrivacy = false, $protectPrivacy = false, $additional = [])
+    public function register(
+        $domain,
+        $years,
+        $ns,
+        $customer,
+        $reg,
+        $admin,
+        $tech,
+        $billing,
+        $invoice,
+        $purchasePrivacy = FALSE,
+        $protectPrivacy = FALSE,
+        $additional = []
+    )
     {
         return $this->post(
             'register',
             [
-                'domain-name' => $domain,
-                'years' => $years,
-                'ns' => $ns,
-                'customer-id' => $customer,
-                'reg-contact-id' => $reg,
-                'admin-contact-id' => $admin,
-                'tech-contact-id' => $tech,
+                'domain-name'        => $domain,
+                'years'              => $years,
+                'ns'                 => $ns,
+                'customer-id'        => $customer,
+                'reg-contact-id'     => $reg,
+                'admin-contact-id'   => $admin,
+                'tech-contact-id'    => $tech,
                 'billing-contact-id' => $billing,
-                'invoice-option' => $invoice, // Options: NoInvoice, PayInvoice, KeepInvoice
-                'purchase-privacy' => $purchasePrivacy,
-                'protect-privacy' => $protectPrivacy,
+                'invoice-option'     => $invoice, // Options: NoInvoice, PayInvoice, KeepInvoice
+                'purchase-privacy'   => $purchasePrivacy,
+                'protect-privacy'    => $protectPrivacy,
             ] + $this->processAttributes($additional)
         );
     }
 
-    public function transfer($domain, $customer, $reg, $admin, $tech, $billing, $invoice, $code, $ns = [], $purchasePrivacy = false, $protectPrivacy = false, $additional = [])
+    public function transfer(
+        $domain,
+        $customer,
+        $reg,
+        $admin,
+        $tech,
+        $billing,
+        $invoice,
+        $code,
+        $ns = [],
+        $purchasePrivacy = FALSE,
+        $protectPrivacy = FALSE,
+        $additional = []
+    )
     {
         return $this->post(
             'register',
             [
-                'domain-name' => $domain,
-                'auth-code' => $code,
-                'ns' => $ns,
-                'customer-id' => $customer,
-                'reg-contact-id' => $reg,
-                'admin-contact-id' => $admin,
-                'tech-contact-id' => $tech,
+                'domain-name'        => $domain,
+                'auth-code'          => $code,
+                'ns'                 => $ns,
+                'customer-id'        => $customer,
+                'reg-contact-id'     => $reg,
+                'admin-contact-id'   => $admin,
+                'tech-contact-id'    => $tech,
                 'billing-contact-id' => $billing,
-                'invoice-option' => $invoice, // Options: NoInvoice, PayInvoice, KeepInvoice
-                'purchase-privacy' => $purchasePrivacy,
-                'protect-privacy' => $protectPrivacy,
+                'invoice-option'     => $invoice, // Options: NoInvoice, PayInvoice, KeepInvoice
+                'purchase-privacy'   => $purchasePrivacy,
+                'protect-privacy'    => $protectPrivacy,
             ] + $this->processAttributes($additional)
         );
     }
@@ -121,8 +173,8 @@ class Domains {
         return $this->post(
             'submit-auth-code',
             [
-                'order-id' => $orderId,
-                'auth-code' => $code
+                'order-id'  => $orderId,
+                'auth-code' => $code,
             ],
             'transfers/'
         );
@@ -130,20 +182,26 @@ class Domains {
 
     public function validateTransfer($domain)
     {
-        return $this->get('validate-transfer', [
-            'domain-name' => $domain
-        ]);
+        return $this->get(
+            'validate-transfer',
+            [
+                'domain-name' => $domain,
+            ]
+        );
     }
 
     public function renew($orderId, $years, $exp, $purchasePrivacy, $invoice)
     {
-        return $this->post('renew', [
-            'order-id' => $orderId,
-            'years' => $years,
-            'exp-date' => strtotime($exp),
-            'purchase-privacy' => $purchasePrivacy,
-            'invoice-option' => $invoice // Options: NoInvoice, PayInvoice, KeepInvoice, OnlyAdd
-        ]);
+        return $this->post(
+            'renew',
+            [
+                'order-id'         => $orderId,
+                'years'            => $years,
+                'exp-date'         => strtotime($exp),
+                'purchase-privacy' => $purchasePrivacy,
+                'invoice-option'   => $invoice // Options: NoInvoice, PayInvoice, KeepInvoice, OnlyAdd
+            ]
+        );
     }
 
     public function search(
@@ -153,7 +211,7 @@ class Domains {
         $orderIds = [],
         $resellers = [],
         $customers = [],
-        $showChild = false,
+        $showChild = FALSE,
         $productKeys = [],
         $statuses = [],
         $domain = '',
@@ -162,7 +220,8 @@ class Domains {
         $createdEnd = '',
         $expireStart = '',
         $expireEnd = ''
-    ) {
+    )
+    {
         $dates = [];
         if (!empty($createdStart)) {
             $dates['creation-date-start'] = strtotime($createdStart);
@@ -183,17 +242,17 @@ class Domains {
         return $this->get(
             'search',
             [
-                'no-of-results' => $records,
-                'page-no' => $page,
-                'order-by' => $order,
-                'order-id' => $orderIds,
-                'reseller-id' => $resellers,
-                'customer-id' => $customers,
+                'no-of-results'     => $records,
+                'page-no'           => $page,
+                'order-by'          => $order,
+                'order-id'          => $orderIds,
+                'reseller-id'       => $resellers,
+                'customer-id'       => $customers,
                 'show-child-orders' => $showChild,
-                'product-key' => $productKeys,
-                'status' => $statues, // InActive, Active, Suspended, Pending Delete Restorable, Deleted, Archived, Pending Verification, Failed Verification
-                'domain-name' => $domain,
-                'privacy-enabled' => $privacy // true, false, na
+                'product-key'       => $productKeys,
+                'status'            => $statuses, // InActive, Active, Suspended, Pending Delete Restorable, Deleted, Archived, Pending Verification, Failed Verification
+                'domain-name'       => $domain,
+                'privacy-enabled'   => $privacy // true, false, na
             ] + $dates
         );
     }
@@ -210,18 +269,24 @@ class Domains {
 
     public function getDetailsByOrderId($orderId, $options = ['All'])
     {
-        return $this->get('details', [
-            'order-id' => $orderId,
-            'options' => $options // All, OrderDetails, ContactIds, RegistrantContactDetails, AdminContactDetails, TechContactDetails, BillingContactDetails, NsDetails, DoaminStatus, DNSSECDetails, StatusDetails
-        ]);
+        return $this->get(
+            'details',
+            [
+                'order-id' => $orderId,
+                'options'  => $options // All, OrderDetails, ContactIds, RegistrantContactDetails, AdminContactDetails, TechContactDetails, BillingContactDetails, NsDetails, DoaminStatus, DNSSECDetails, StatusDetails
+            ]
+        );
     }
 
-    public function getDetailsByDomain($doamin, $options = ['All'])
+    public function getDetailsByDomain($domain, $options = ['All'])
     {
-        return $this->get('details-by-name', [
-            'domain-name' => $doamin,
-            'options' => $options // All, OrderDetails, ContactIds, RegistrantContactDetails, AdminContactDetails, TechContactDetails, BillingContactDetails, NsDetails, DoaminStatus, DNSSECDetails, StatusDetails
-        ]);
+        return $this->get(
+            'details-by-name',
+            [
+                'domain-name' => $domain,
+                'options'     => $options // All, OrderDetails, ContactIds, RegistrantContactDetails, AdminContactDetails, TechContactDetails, BillingContactDetails, NsDetails, DoaminStatus, DNSSECDetails, StatusDetails
+            ]
+        );
     }
 
     public function modifyNameServers($orderId, $ns)
@@ -231,75 +296,99 @@ class Domains {
 
     public function addChildNameServer($orderId, $cns, $ip)
     {
-        return $this->post('add-cns', [
-            'order-id' => $orderId,
-            'cns' => $ns,
-            'ip' => $ip
-        ]);
+        return $this->post(
+            'add-cns',
+            [
+                'order-id' => $orderId,
+                'cns'      => $cns,
+                'ip'       => $ip,
+            ]
+        );
     }
 
-    public function renameChildNameServer($orderId, $oldcns, $newcns)
+    public function renameChildNameServer($orderId, $oldCNS, $newCNS)
     {
-        return $this->post('modify-cns-name', [
-            'order-id' => $orderId,
-            'old-cns' => $oldcns,
-            'new-cns' => $newcns
-        ]);
+        return $this->post(
+            'modify-cns-name',
+            [
+                'order-id' => $orderId,
+                'old-cns'  => $oldCNS,
+                'new-cns'  => $newCNS,
+            ]
+        );
     }
 
     public function modifyChildNameServer($orderId, $cns, $oldIP, $newIP)
     {
-        return $this->post('modify-cns-ip', [
-            'order-id' => $orderId,
-            'cns' => $cns,
-            'old-ip' => $oldIP,
-            'new-ip' => $newIP
-        ]);
+        return $this->post(
+            'modify-cns-ip',
+            [
+                'order-id' => $orderId,
+                'cns'      => $cns,
+                'old-ip'   => $oldIP,
+                'new-ip'   => $newIP,
+            ]
+        );
     }
 
     public function deleteChildNameServer($orderId, $cns, $ip)
     {
-        return $this->post('delete-cns-ip', [
-            'order-id' => $orderId,
-            'cns' => $ns,
-            'ip' => $ip
-        ]);
+        return $this->post(
+            'delete-cns-ip',
+            [
+                'order-id' => $orderId,
+                'cns'      => $cns,
+                'ip'       => $ip,
+            ]
+        );
     }
 
     public function modifyContact($orderId, $regContactId, $adminContactId, $techContactId, $billingContactId)
     {
-        return $this->post('modify-contact', [
-            'order-id' => $orderId,
-            'reg-contact-id' => $regContactId,
-            'admin-contact-id' => $adminContactId,
-            'tech-contact-id' => $techContactId,
-            'billing-contact-id' => $billingContactId
-        ]);
+        return $this->post(
+            'modify-contact',
+            [
+                'order-id'           => $orderId,
+                'reg-contact-id'     => $regContactId,
+                'admin-contact-id'   => $adminContactId,
+                'tech-contact-id'    => $techContactId,
+                'billing-contact-id' => $billingContactId,
+            ]
+        );
     }
 
     public function purchasePrivacy($orderId, $invoiceOption)
     {
-        return $this->post('modify-contact', [
-            'order-id' => $orderId,
-            'invoice-option' => $invoiceOption // NoInvoice, PayInvoice, KeepInvoice, OnlyAdd
-        ]);
+        return $this->post(
+            'modify-contact',
+            [
+                'order-id'       => $orderId,
+                'invoice-option' => $invoiceOption // NoInvoice, PayInvoice, KeepInvoice, OnlyAdd
+            ]
+        );
     }
 
     public function modifyPrivacyProtection($orderId, $protectPrivacy, $reason)
     {
-        return $this->post('modify-privacy-protection', [
-            'order-id' => $orderId,
-            'protect-privacy' => $protectPrivacy,
-            'reason' => $reason
-        ]);
+        return $this->post(
+            'modify-privacy-protection',
+            [
+                'order-id'        => $orderId,
+                'protect-privacy' => $protectPrivacy,
+                'reason'          => $reason,
+            ]
+        );
     }
 
     public function modifyAuthCode($orderId, $authCode)
     {
-        return $this->post('modify-auth-code', [
-            'order-id' => $orderId,
-            'auth-code' => $authCode
-        ]);
+        return $this->post(
+            'modify-auth-code',
+            [
+                'order-id'  => $orderId,
+                'auth-code' => $authCode,
+            ]
+        );
     }
 
     public function enableTheftProtection($orderId)
@@ -327,9 +416,9 @@ class Domains {
         return $this->post(
             'modify-whois-pref',
             [
-                'order-id' => $orderId,
+                'order-id'   => $orderId,
                 'whois-type' => $type, // Natural, Legal
-                'publish' => $publish
+                'publish'    => $publish,
             ],
             'tel/'
         );
@@ -365,25 +454,27 @@ class Domains {
         return $this->post('recheck-ns', ['order-id' => $orderId], 'de/');
     }
 
-    public function setXXXAssoication($orderId, $id = '')
+    public function setXXXAssociation($orderId, $id = '')
     {
-        return $this->post('assoication-details', ['order-id' => $orderId, 'association-id' => $id], 'dotxxx/');
+        return $this->post('association-details', ['order-id' => $orderId, 'association-id' => $id], 'dotxxx/');
     }
 
-    public function getXXXAssoication($orderId)
+    public function getXXXAssociation($orderId)
     {
-        return $this->post('assoication-details', ['order-id' => $orderId], 'dotxxx/');
+        return $this->post('association-details', ['order-id' => $orderId], 'dotxxx/');
     }
 
     public function addDNSSEC($orderId, $attributes)
     {
         $attributes = $this->processAttributes($attributes);
+
         return $this->post('add-dnssec', ['orderId' => $orderId] + $attributes);
     }
 
     public function delDNSSEC($orderId, $attributes)
     {
         $attributes = $this->processAttributes($attributes);
+
         return $this->post('del-dnssec', ['orderId' => $orderId] + $attributes);
     }
 
@@ -392,25 +483,34 @@ class Domains {
         return $this->post('resend-verification', ['order-id' => $orderId], 'raa/');
     }
 
-    public function addWishlist($customerId, $domains)
+    public function addWishList($customerId, $domains)
     {
         return $this->post('add', ['customerid' => $customerId, 'domain' => $domains], 'preordering/');
     }
 
-    public function deleteWishlist($customerId, $domain)
+    public function deleteWishList($customerId, $domain)
     {
         return $this->post('delete', ['customerid' => $customerId, 'domain' => $domain], 'preordering/');
     }
 
-    public function fetchWishlist($records = 10, $page = 0, $customerId = -1, $resellerId = -1, $slds = [], $tlds = [], $createdStart = false, $createdEnd = false)
+    public function fetchWishList(
+        $records = 10,
+        $page = 0,
+        $customerId = -1,
+        $resellerId = -1,
+        $slds = [],
+        $tlds = [],
+        $createdStart = FALSE,
+        $createdEnd = FALSE
+    )
     {
         $data = [
             'no-of-records' => $records,
-            'page-no' => $page,
+            'page-no'       => $page,
         ];
 
         if ($customerId !== -1) {
-            $data['customerid'] = $customerid;
+            $data['customerid'] = $customerId;
         }
 
         if ($resellerId !== -1) {
@@ -425,11 +525,11 @@ class Domains {
             $data['tld'] = $tlds;
         }
 
-        if ($createdStart !== false) {
+        if ($createdStart !== FALSE) {
             $data['creation-date-start'] = strtotime($createdStart);
         }
 
-        if ($createdEnd !== false) {
+        if ($createdEnd !== FALSE) {
             $data['creation-date-end'] = strtotime($createdEnd);
         }
 
@@ -443,11 +543,14 @@ class Domains {
 
     public function checkSunrise($sld, $tlds, $smd)
     {
-        return $this->get('available-sunrise', [
-            'sld' => $sld,
-            'tld' => $tlds,
-            'smd' => $smd
-        ]);
+        return $this->get(
+            'available-sunrise',
+            [
+                'sld' => $sld,
+                'tld' => $tlds,
+                'smd' => $smd,
+            ]
+        );
     }
 
     public function fetchTMClaim($claimKey)
@@ -455,7 +558,7 @@ class Domains {
         return $this->get('get-tm-notice', ['lookup-key' => $claimKey]);
     }
 
-    public function getPreorderTLDs($phase = 'sunrise')
+    public function getPreOrderTLDs($phase = 'sunrise')
     {
         return $this->get('tlds-in-phase', ['phase' => $phase]);
     }
@@ -465,5 +568,3 @@ class Domains {
         return $this->get('tld-info');
     }
 }
-
-?>
